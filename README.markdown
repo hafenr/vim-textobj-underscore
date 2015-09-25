@@ -1,6 +1,9 @@
 Introduction
 ------------
 
+This is a fork of the original plugin. In this version the text objects are
+extended in such a way that sub words at the beginning of an underscore-separated
+word are also recognized by the text object.
 The textobj-underscore plugin provides two new text-objects which are
 triggered by `a_` and `i_` respectively. You can use them when you have to
 deal with the following type of words:
@@ -35,4 +38,5 @@ Contributors
 Copyright
 ---------
 
-Copyright (c) Luca Pette. Distributed under the same terms as Vim itself.
+- Copyright (c) Luca Pette. Distributed under the same terms as Vim itself.
+- Copyright (c) Robin Hafen. Distributed under the same terms as Vim itself.

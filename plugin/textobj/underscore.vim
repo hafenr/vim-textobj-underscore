@@ -2,37 +2,45 @@ if exists('g:loaded_textobj_underscore')
   finish
 endif
 
+
 call textobj#user#plugin('underscore', {
-\      '-': {
-\        '*sfile*': expand('<sfile>:p'),
-\        'select-a': 'a_',  '*select-a-function*': 's:select_a',
-\        'select-i': 'i_',  '*select-i-function*': 's:select_i'
-\      }
-\    })
+\   'code': {
+\     'select-a-function': 'FindUnderscoreA',
+\     'select-a': 'a_',
+\     'select-i-function': 'FindUnderscoreI',
+\     'select-i': 'i_',
+\   },
+\ })
 
-function! s:select_a()
-  normal! F_
 
-  let end_pos = getpos('.')
-
-  normal! f_
-
-  let start_pos = getpos('.')
-  return ['v', start_pos, end_pos]
+function! FindUnderscoreA()
+    call search('\v(_|\s|^)', 'eb', line('.'))
+    let head_pos = getpos('.')
+    call search('\v(_|\s|$)', 'e', line('.'))
+    let tail_pos = getpos('.')
+    return ['v', head_pos, tail_pos]
 endfunction
 
-" ciao_come_stai
 
-function! s:select_i()
-  normal! T_
-
-  let end_pos = getpos('.')
-
-  normal! t_
-
-  let start_pos = getpos('.')
-
-  return ['v', start_pos, end_pos]
+function! FindUnderscoreI()
+    call search('\v(_|\s|^)', 'eb', line('.'))
+    " If not at the beginning of a line, move right.
+    let char_under_cursor = getline('.')[col('.')-1]
+    let in_first_col = col('.') == 1
+    if !in_first_col || char_under_cursor =~ '\v(_|\s)'
+        normal! l
+    endif
+    let head_pos = getpos('.')
+    call search('\v(_|\s|$)', 'e', line('.'))
+    " If not at the end of a line, move left.
+    let char_under_cursor = getline('.')[col('.')-1]
+    let in_last_col = col('.') == col('$') - 1
+    if !in_last_col || char_under_cursor =~ '\v(_|\s)'
+        normal! h
+    endif
+    let tail_pos = getpos('.')
+    return ['v', head_pos, tail_pos]
 endfunction
+
 
 let g:loaded_textobj_underscore = 1
